@@ -944,4 +944,73 @@ function buildpaths($dir)
 	}
 	return $files;
 }
+
+
+/*
+*
+* @Credit Dubz
+*
+* Fills an IP address and adds missing 0's
+* IPv4: 127.0.0.1 = 127.000.000.001
+* IPv6: ::1 = 0000:0000:0000:0000:0000:0000:0000:0001
+*
+* @param $ip  The IP address to convert (defaults to the getIP() function above)
+* @return A string of the IP converted
+*/
+function full_ip($ip = false)
+{
+	if(!$ip)
+		$ip = getIP();
+	if(filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+	{
+		#I there a bunch of 0's to be filled in this?
+		if(stripos($ip, '::') !== false)
+		{
+			#Get the data on either side of the shortener
+			list($left, $right) = explode('::', $ip);
+			#How much do we need to insert?
+			$total = ($left ? count(explode(':', $left)) : 0) + ($right ? count(explode(':', $right)) : 0);
+			#Generate the middle contents
+			$middle = implode(':', array_fill(0, 8 - $total, '0000'));
+			#Pad everything
+			$ip = array();
+			#Fill left and add
+			if($left)
+			{
+				$l = explode(':', $left);
+				foreach($l as $k => $v)
+					$l[$k] = str_pad($v, 4, '0', STR_PAD_LEFT);
+				$ip[] = implode(':', $l);
+			}
+			#Add the middle
+			$ip[] = $middle;
+			#Fill right and add
+			if($right)
+			{
+				$r = explode(':', $right);
+				foreach($r as $k => $v)
+					$r[$k] = str_pad($v, 4, '0', STR_PAD_LEFT);
+				$ip[] = implode(':', $r);
+			}
+			#Stitch it back together
+			$ip = implode(':', $ip);
+		}
+		#Otherwise, just 0 pad everything
+		else
+		{
+			$ip = explode(':', $ip);
+			foreach($ip as $k => $v)
+				$ip[$k] = str_pad($v, 4, '0', STR_PAD_LEFT);
+			$ip = implode(':', $ip);
+		}
+	}
+	else
+	{
+		$ip = explode('.', $ip);
+		foreach($ip as $k => $v)
+			$ip[$k] = str_pad($v, 3, '0', STR_PAD_LEFT);
+		$ip = implode('.', $ip);
+	}
+	return $ip;
+}
 ?>
