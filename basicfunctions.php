@@ -143,7 +143,11 @@ function curl_post($url, $postData, $headers = array(), $proxy = null, $proxypor
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($curl, CURLOPT_POST, true);
 		curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array_merge(array("Content-type: application/x-www-form-urlencoded"), $headers));
+		#Lets merge the headers with some defaults
+		$headers = array_merge(array('Content-Type' => 'application/x-www-form-urlencoded'), $headers);
+		#Change the array to add the key to the values and set
+		$headers = array_map(function($v, $k) { return ($v ? $k.': '.$v : ''); }, $headers, array_keys($headers));
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 		$html = curl_exec($curl);
 		$html = explode("\n\n", str_replace("\r", '', $html), 2);
 	}
