@@ -148,8 +148,13 @@ function curl_post($url, $postData, $headers = array(), $proxy = null, $proxypor
 		#Change the array to add the key to the values and set
 		$headers = array_map(function($v, $k) { return ($v ? $k.': '.$v : ''); }, $headers, array_keys($headers));
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($curl, CURLINFO_HEADER_OUT, true);
 		$html = curl_exec($curl);
-		$html = explode("\n\n", str_replace("\r", '', $html), 2);
+		curl_close($curl);
+		return array(
+			"status" => "ok",
+			"content" => $html
+		);
 	}
 	else
 	{
@@ -157,12 +162,6 @@ function curl_post($url, $postData, $headers = array(), $proxy = null, $proxypor
 			"status" => "error",
 		);
 	}
-	curl_close($curl);
-	return array(
-		"status" => "ok",
-		"header" => $html[0],
-		"content" => $html[1]
-	);
 }
 
 
@@ -276,7 +275,7 @@ function save_image($inPath, $directory = '')
 	if($in)
 	{
 		$out = fopen($outPath, "wb");
-		while ($chunk = fread($in, 8192))
+		while($chunk = fread($in, 8192))
 		{
 			fwrite($out, $chunk, 8192);
 		}
@@ -552,9 +551,9 @@ function hextostr($hex)
 function ucname($string)
 {
 	$string = ucwords(strtolower($string));
-	foreach (array('-', '\'') as $delimiter)
+	foreach(array('-', '\'') as $delimiter)
 	{
-		if (strpos($string, $delimiter) !== false)
+		if(strpos($string, $delimiter) !== false)
 			$string = implode($delimiter, array_map('ucfirst', explode($delimiter, $string)));
 	}
 	return $string;
@@ -598,15 +597,15 @@ function utf8_ord($char)
 	if($len <= 0)
 		return false;
 	$h = ord($char{0});
-	if ($h <= 0x7F)
+	if($h <= 0x7F)
 		return $h;
-	if ($h < 0xC2)	
+	if($h < 0xC2)	
 		return false;
-	if ($h <= 0xDF && $len>1)
+	if($h <= 0xDF && $len>1)
 		return ($h & 0x1F) <<  6 | (ord($char{1}) & 0x3F);
-	if ($h <= 0xEF && $len>2)
+	if($h <= 0xEF && $len>2)
 		return ($h & 0x0F) << 12 | (ord($char{1}) & 0x3F) << 6 | (ord($char{2}) & 0x3F);		  
-	if ($h <= 0xF4 && $len>3)
+	if($h <= 0xF4 && $len>3)
 		return ($h & 0x0F) << 18 | (ord($char{1}) & 0x3F) << 12 | (ord($char{2}) & 0x3F) << 6 | (ord($char{3}) & 0x3F);
 	return false;
 }
@@ -650,7 +649,7 @@ function bitShiftLeft_32($a, $b)
 	$binary = substr($binary, -32);
 	// if it's a negative number return the 2's complement
 	// otherwise just return the number
-	if ($binary{0} == "1")
+	if($binary{0} == "1")
 	{
 		return -(pow(2, 31) - bindec(substr($binary, 1)));
 	}
@@ -685,7 +684,7 @@ function bitShiftRight_32($a, $b, $leadingZeros = false)
 	$binary = str_pad($binary, 32, $leadingZeros ? 0 : $binary{0}, STR_PAD_LEFT);
 	// if it's a negative number return the 2's complement
 	// otherwise just return the number
-	if ($binary{0} == "1")
+	if($binary{0} == "1")
 	{
 		return -(pow(2, 31) - bindec(substr($binary, 1)));
 	}
@@ -1016,5 +1015,20 @@ function full_ip($ip = false)
 		$ip = implode('.', $ip);
 	}
 	return $ip;
+}
+
+
+/*
+*
+* @Credit Dubz
+*
+* Equivalent of JavaScript's parseInt()
+*
+* @param $str  The input string to parse
+* @return An integer of the numbers in the input string
+*/
+function parseInt($str)
+{
+	return (int)preg_replace('/\D/', '', $str);
 }
 ?>
