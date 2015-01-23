@@ -731,71 +731,58 @@ function unichr($a)
 * @Credit Dubz
 *
 * Return mime type of file extension
+* Data obtained from http://www.iana.org/assignments/media-types/media-types.xhtml
 *
-* @param $extension Extension of file (without the period)
+* @param $file Direct path to a file
 * @return A string of the mime type
 */
-function getMimeType($extension)
+function getMimeType($file)
 {
-	switch($extension)
+	#First see if we can use the file info functions
+	if(function_exists('finfo_open') && function_exists('finfo_file'))
+	{
+		$finfo = finfo_open(FILEINFO_MIME_TYPE);
+		$type = finfo_file($finfo, $file);
+		finfo_close($finfo);
+		return $type;
+	}
+	#If not, fall back to a table of types by extension
+	switch(getFileExtension($file))
 	{
 		#Applications
-		case '7z':
-			return 'application/x-7z-compressed';
-		break;
-		case 'eot':
-			return 'application/vnd.ms-fontobject';
-		break;
-		case 'exe':
-			return 'application/exe';
-		break;
-		case 'js':
-			return 'application/javascript';
-		break;
-		case 'swf':
-			return 'application/x-shockwave-flash';
-		break;
-		case 'ttf':
-			return 'application/x-font-ttf';
-		break;
-		case 'woff':
-			return 'application/x-font-woff';
-		break;
-		case 'zip':
-			return 'application/zip';
-		break;
+		case '7z':		return 'application/x-7z-compressed';
+		case 'eot': 	return 'application/vnd.ms-fontobject';
+		case 'exe':		return 'application/exe';
+		case 'gz':		return 'application/gzip';
+		case 'js':		return 'application/javascript';
+		case 'json':	return 'application/json';
+		case 'swf':		return 'application/x-shockwave-flash';
+		case 'ttf':		return 'application/x-font-ttf';
+		case 'woff':	return 'application/font-woff';
+		case 'xcs':		return 'application/calendar+xml';
+		case 'zip':		return 'application/zip';
 		#Images
-		case 'bmp':
-			return 'image/bmp';
-		break;
-		case 'ico':
-			return 'image/ico';
-		break;
-		case 'gif':
-			return 'image/gif';
-		break;
-		case 'jpg':
-		case 'jpeg':
-			return 'image/jpeg';
-		break;
-		case 'png':
-			return 'image/png';
-		break;
-		case 'svg':
-			return 'image/svg+xml';
-		break;
-		case 'tiff':
-			return 'image/tiff';
-		break;
+		case 'bmp':		return 'image/bmp';
+		case 'ico':		return 'image/ico';
+		case 'gif':		return 'image/gif';
+		case 'jpg':		return 'image/jpeg';
+		case 'jpeg':	return 'image/jpeg';
+		case 'png':		return 'image/png';
+		case 'svg':		return 'image/svg+xml';
+		case 'tiff':	return 'image/tiff';
 		#Text
-		case 'css':
-			return 'text/css';
-		break;
-		case 'html':
-			return 'text/html';
-		break;
-		default:
-			return 'text/plain';
+		case 'css':		return 'text/css';
+		case 'csv':		return 'text/csv';
+		case 'html':	return 'text/html';
+		case 'rtf':		return 'text/rtf';
+		case 'txt':		return 'text/plain';
+		case 'xml':		return 'text/xml';
+		#Videos
+		case '3gp':		return 'video/3gpp';
+		case '3gpp':	return 'video/3gpp';
+		case 'mp4':		return 'video/mp4';
+		#Default/unknown
+		default:		return 'text/plain';
 	}
 }
 
