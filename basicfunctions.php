@@ -740,14 +740,17 @@ function getMimeType($extension)
 	switch($extension)
 	{
 		#Applications
-		case 'exe':
-			return 'application/exe';
-		break;
 		case '7z':
 			return 'application/x-7z-compressed';
 		break;
 		case 'eot':
 			return 'application/vnd.ms-fontobject';
+		break;
+		case 'exe':
+			return 'application/exe';
+		break;
+		case 'js':
+			return 'application/javascript';
 		break;
 		case 'swf':
 			return 'application/x-shockwave-flash';
@@ -787,9 +790,6 @@ function getMimeType($extension)
 		#Text
 		case 'css':
 			return 'text/css';
-		break;
-		case 'js':
-			return 'text/javascript';
 		break;
 		case 'html':
 			return 'text/html';
