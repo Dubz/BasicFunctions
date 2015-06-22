@@ -112,7 +112,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 * Posts data to a website using the curl method
 *
 * @param $url The URL to post to
-* @param $postData The array of data to be posted
+* @param $post_data The array of data to be posted
 * @param $headers Additional headers to be sent
 * @param $proxy The proxy address to be used
 * @param $proxyport Port to connect to proxy
@@ -121,7 +121,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 * @param $timeout Time to wait for proxy connection
 * @return An array of strings containing the status and content (html)
 */
-function curl_post($url, $postData, $headers = array(), $proxy = null, $proxyport = null, $proxypwd = false, $proxytype = CURLPROXY_HTTP, $timeout = 30)
+function curl_post($url, $post_data, $headers = array(), $proxy = null, $proxyport = null, $proxypwd = false, $proxytype = CURLPROXY_HTTP, $timeout = 30)
 {
 	$curl = curl_init();
 	if($curl)
@@ -142,7 +142,7 @@ function curl_post($url, $postData, $headers = array(), $proxy = null, $proxypor
 		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($curl, CURLOPT_POST, true);
-		curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+		curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
 		#Lets merge the headers with some defaults
 		$headers = array_merge(array('Content-Type' => 'application/x-www-form-urlencoded'), $headers);
 		#Change the array to add the key to the values and set
