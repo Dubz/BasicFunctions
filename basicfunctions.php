@@ -55,7 +55,7 @@ function stribet($inputstr, $deliLeft, $deliRight)
 function get($url, $headers_additional = array(), $headers_return = false, $headers_parse = false)
 {
 	$urlp = parse_url($url);
-	$fp = fsockopen($urlp['host'], 80);
+	$fp = fsockopen($urlp['host'], getURLPort($urlp));
 	$path = explode('/', $url, 4);
 	$cp = count($path);
 	$path = ($cp >= 4) ? $path[3] : "";
@@ -72,7 +72,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 	#Add/replace headers with user defined variables
 	$headers_main = array_merge($headers_main, $headers_additional);
 	#Build request headers
-	$request_headers = "GET /$path HTTP/1.0\r\n";
+	$request_headers = "GET /$path ".$urlp['scheme']."/1.0\r\n";
 	foreach($headers_main as $key => $value)
 		$request_headers .= $key.':'.$value."\r\n";
 	$request_headers .= "\r\n";
@@ -1018,4 +1018,41 @@ function parseInt($str)
 {
 	return (int)preg_replace('/\D/', '', $str);
 }
-?>
+
+
+/*
+*
+* @Credit vdklah
+*
+* Returns a port to use from a parsed url
+*
+* @param $urlInfo  An array obtained from parse_url()
+* @return An integer of the port to be used
+*/
+function getURLPort($urlInfo)
+{
+	if(isset($urlInfo['port']))
+		return $urlInfo['port'];
+	else
+	{
+		//No port specified; get default port
+		if(isset($urlInfo['scheme']))
+		{
+			switch($urlInfo['scheme'])
+			{
+				case 'http':
+					return 80; //Default for http
+				case 'https':
+					return 443; //Default for https
+				case 'ftp':
+					return 21; //Default for ftp
+				case 'ftps':
+					return 990; //Default for ftps
+                default:
+					return 0; //Error; Unsupported scheme
+			}
+		}
+		else
+			return 0; //Error; Unknown scheme
+	}
+}
