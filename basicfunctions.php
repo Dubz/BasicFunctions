@@ -72,7 +72,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 	#Add/replace headers with user defined variables
 	$headers_main = array_merge($headers_main, $headers_additional);
 	#Build request headers
-	$request_headers = "GET /$path ".$urlp['scheme']."/1.0\r\n";
+	$request_headers = "GET /$path ".strtoupper($urlp['scheme'])."/1.0\r\n";
 	foreach($headers_main as $key => $value)
 		$request_headers .= $key.':'.$value."\r\n";
 	$request_headers .= "\r\n";
