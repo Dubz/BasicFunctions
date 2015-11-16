@@ -734,12 +734,13 @@ function unichr($a)
 * Data obtained from http://www.iana.org/assignments/media-types/media-types.xhtml
 *
 * @param $file Direct path to a file
+* @param $use_fileinfo Whether or not fileinfo (finfo) should be used (if available)
 * @return A string of the mime type
 */
-function getMimeType($file)
+function getMimeType($file, $use_fileinfo = true)
 {
 	#First see if we can use the file info functions
-	if(function_exists('finfo_open') && function_exists('finfo_file'))
+	if($use_fileinfo && function_exists('finfo_open') && function_exists('finfo_file'))
 	{
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$type = finfo_file($finfo, $file);
