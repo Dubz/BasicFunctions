@@ -796,10 +796,10 @@ function getMimeType($file, $use_fileinfo = true)
 *
 * @param $data A string (or array of strings) to replace
 * @param $replacement An array of variables to use instead of constants
-* @param $pattern The regex pattern to search for using $1 as the word filler (default is between brackets {$1})
+* @param $pattern The regex pattern to search for using $1 as the word filler (default is between two pairs of brackets {{$1}})
 * @return A string of the mime type
 */
-function replace($data, $replacement = null, $pattern = '/\{$1\}/')
+function replace($data, $replacement = null, $pattern = '/\{\{$1\}\}/')
 {
 	#Make sure the variable is in the pattern, else append it
 	if(strpos($pattern, '$1') === false)
