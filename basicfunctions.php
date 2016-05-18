@@ -324,18 +324,18 @@ function is_serialized($serializedString)
 *
 * @param $ip IP adress of server checking
 * @param $port Port number to check if open
-* @return Returns a boolean of the port's status
+* @param $timeout How long to wait for a connection
+* @return Returns an array of the port's status using "open" for results and adding "errno" and "errstr" on closed
 */
-function checkPort($ip, $port = 80, $timeout = 2)
+function checkPort($ip = '127.0.0.1', $port = 80, $timeout = 2)
 {
-	if(!$ip || !$port)
-		return false;
 	$conn = @fsockopen($ip, $port, $errno, $errstr, $timeout);
 	if($conn)
 	{
 		fclose($conn);
-		return true;
+		return array('open' => true);
 	}
+	return array('open' => false, 'errno' => $errno, 'errstr' => $errstr);
 }
 
 
