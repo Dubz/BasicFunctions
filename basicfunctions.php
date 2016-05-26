@@ -92,7 +92,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 				@list($key, $value) = explode(':', $header, 2);
 				$headers[trim($key)] = trim($value);
 			}
-			return array('headers' => $headers, 'content' => $data[1]);
+			return array('headers' => $headers, 'content' => (count($data) > 1 ? $data[1] : false));
 		}
 		else
 			return $res;
@@ -100,7 +100,10 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 	else
 	{
 		$res = explode("\r\n\r\n", $res, 2);
-		return $res[1];
+		if(count($res) > 1)
+			return $res[1];
+		else
+			return false;
 	}
 }
 
