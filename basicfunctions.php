@@ -755,6 +755,7 @@ function getMimeType($file, $use_fileinfo = true)
 	{
 		#Applications
 		case '7z':		return 'application/x-7z-compressed';
+		case 'bat':		return 'application/bat';
 		case 'eot': 	return 'application/vnd.ms-fontobject';
 		case 'exe':		return 'application/exe';
 		case 'gz':		return 'application/gzip';
