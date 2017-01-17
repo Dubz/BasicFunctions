@@ -750,45 +750,92 @@ function getMimeType($file, $use_fileinfo = true)
 		finfo_close($finfo);
 		return $type;
 	}
-	#If not, fall back to a table of types by extension
-	switch(getFileExtension($file))
-	{
-		#Applications
-		case '7z':		return 'application/x-7z-compressed';
-		case 'bat':		return 'application/bat';
-		case 'eot': 	return 'application/vnd.ms-fontobject';
-		case 'exe':		return 'application/exe';
-		case 'gz':		return 'application/gzip';
-		case 'js':		return 'application/javascript';
-		case 'json':	return 'application/json';
-		case 'swf':		return 'application/x-shockwave-flash';
-		case 'ttf':		return 'application/x-font-ttf';
-		case 'woff':	return 'application/font-woff';
-		case 'xcs':		return 'application/calendar+xml';
-		case 'zip':		return 'application/zip';
-		#Images
-		case 'bmp':		return 'image/bmp';
-		case 'ico':		return 'image/ico';
-		case 'gif':		return 'image/gif';
-		case 'jpg':		return 'image/jpeg';
-		case 'jpeg':	return 'image/jpeg';
-		case 'png':		return 'image/png';
-		case 'svg':		return 'image/svg+xml';
-		case 'tiff':	return 'image/tiff';
+	#If not, fall back to an array of extensions
+	$extensions = array(
+		#Application
+		'abw'	=> 'application/x-abiword',
+		'arc'	=> 'application/octet-stream',
+		'azw'	=> 'application/vnd.amazon.ebook',
+		'bat'	=> 'application/bat',
+		'bin'	=> 'application/octet-stream',
+		'bz'	=> 'application/x-bzip',
+		'bz2'	=> 'application/x-bzip2',
+		'csh'	=> 'application/x-csh',
+		'doc'	=> 'application/msword',
+		'eot'	=> 'application/vnd.ms-fontobject',
+		'epub'	=> 'application/epub+zip',
+		'exe'	=> 'application/exe',
+		'gz'	=> 'application/gzip',
+		'jar'	=> 'application/java-archive',
+		'js'	=> 'application/javascript',
+		'json'	=> 'application/json',
+		'mpkg'	=> 'application/vnd.apple.installer+xml',
+		'odp'	=> 'application/vnd.oasis.opendocument.presentation',
+		'ods'	=> 'application/vnd.oasis.opendocument.spreadsheet',
+		'odt'	=> 'application/vnd.oasis.opendocument.text',
+		'ogx'	=> 'application/ogg',
+		'pdf'	=> 'application/pdf',
+		'ppt'	=> 'application/vnd.ms-powerpoint',
+		'rar'	=> 'application/x-rar-compressed',
+		'rtf'	=> 'application/rtf',
+		'sh'	=> 'application/x-sh',
+		'swf'	=> 'application/x-shockwave-flash',
+		'tar'	=> 'application/x-tar',
+		'ttf'	=> 'application/x-font-ttf',
+		'vsd'	=> 'application/vnd.visio',
+		'woff'	=> 'application/x-font-woff',
+		'xcs'	=> 'application/calendar+xml',
+		'xhtml'	=> 'application/xhtml+xml',
+		'xls'	=> 'application/vnd.ms-excel',
+		'xml'	=> 'application/xml',
+		'xul'	=> 'application/vnd.mozilla.xul+xml',
+		'zip'	=> 'application/zip',
+		'7z'	=> 'application/x-7z-compressed',
+		#Audio
+		'aac'	=> 'audio/aac',
+		'mid'	=> 'audio/mid',
+		'midi'	=> 'audio/midi',
+		'mp3'	=> 'audio/',
+		'oga'	=> 'audio/ogg',
+		'wav'	=> 'audio/x-wav',
+		'weba'	=> 'audio/webm',
+		#Image
+		'bmp'	=> 'image/bmp',
+		'gif'	=> 'image/gif',
+		'ico'	=> 'image/x-icon',
+		'jpeg'	=> 'image/jpeg',
+		'jpg'	=> 'image/jpeg',
+		'png'	=> 'image/png',
+		'svg'	=> 'image/svg+xml',
+		'tif'	=> 'image/tiff',
+		'tiff'	=> 'image/tiff',
+		'webp'	=> 'image/webp',
 		#Text
-		case 'css':		return 'text/css';
-		case 'csv':		return 'text/csv';
-		case 'html':	return 'text/html';
-		case 'rtf':		return 'text/rtf';
-		case 'txt':		return 'text/plain';
-		case 'xml':		return 'text/xml';
-		#Videos
-		case '3gp':		return 'video/3gpp';
-		case '3gpp':	return 'video/3gpp';
-		case 'mp4':		return 'video/mp4';
-		#Default/unknown
-		default:		return 'text/plain';
-	}
+		'css'	=> 'text/css',
+		'csv'	=> 'text/csv',
+		'htm'	=> 'text/html',
+		'html'	=> 'text/html',
+		'ics'	=> 'text/calendar',
+		'rtf'	=> 'text/rtf',
+		'txt'	=> 'text/plain',
+		'xml'	=> 'text/xml',
+		#Video
+		'3gp'	=> 'video/3gpp',
+		'avi'	=> 'video/x-msvideo',
+		'flv'	=> 'video/x-flv',
+		'm3u8'	=> 'application/x-mpegURL';
+		'mov'	=> 'video/quicktime',
+		'mp4'	=> 'video/mp4',
+		'mpeg'	=> 'video/mpeg',
+		'ogv'	=> 'video/ogg',
+		'ts'	=> 'video/MP2T',
+		'webm'	=> 'video/webm',
+		'wmv'	=> 'video/x-ms-wmv',
+	);
+	$ext = getFileExtension($file);
+	if(array_key_exists($ext, $extensions))
+		return $extensions[$ext];
+	return false;
 }
 
 
