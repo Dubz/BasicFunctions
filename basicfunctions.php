@@ -881,7 +881,7 @@ function replace($data, $replacement = null, $pattern = '/\{\{$1\}\}/')
 		foreach($replacement as $key => $value)
 		{
 			if(!is_array($value))
-				$data = preg_replace(preg_replace('/\$1/', $key, $pattern), $value, $data);
+				$data = preg_replace(preg_replace('/\$1/', '\\\\$'.$key, $pattern), $value, $data);
 		}
 	}
 	#Return the data
