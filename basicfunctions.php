@@ -1100,11 +1100,25 @@ function getURLPort($urlInfo)
 					return 21; //Default for ftp
 				case 'ftps':
 					return 990; //Default for ftps
-                default:
+				default:
 					return 0; //Error; Unsupported scheme
 			}
 		}
 		else
 			return 0; //Error; Unknown scheme
 	}
+}
+
+
+/*
+*
+* @credit arplynn@gmail.com
+*
+* Makes the console ding for command line applications
+*
+* @return void
+*/
+function cli_beep()
+{
+	echo "\x07";
 }
