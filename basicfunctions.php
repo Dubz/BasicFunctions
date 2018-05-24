@@ -9,16 +9,18 @@
 ####     functions      ####
   ########################
 
-//Define BASICFUNCTIONS so users can add a check for this file and avoid calling it twice
+#Define BASICFUNCTIONS so users can add a check for this file and avoid calling it twice
+#This may eventualy change to using namespace, not sure how it will deal with current site dependencies so probably not
 define("BASICFUNCTIONS", true);
 
-/*
-* @credit 3nvisi0n
-*
-* Searches the given string and returns the inside of the left and right paremeters (case-sensitive)
-*
-* @return A string of text between $deliLeft and $deliRight
-*/
+/**
+ * Searches the given string and returns the inside of the left and right paremeters (case-sensitive)
+ *
+ * @author 3nvisi0n
+ *
+ * @return A string of text between $deliLeft and $deliRight
+ *
+ */
 function strbet($inputstr, $deliLeft, $deliRight)
 {
 	$posLeft = strpos($inputstr, $deliLeft) + strlen($deliLeft);
@@ -27,13 +29,14 @@ function strbet($inputstr, $deliLeft, $deliRight)
 }
 
 
-/*
-* @credit 3nvisi0n
-*
-* Searches the given string and returns the inside of the left and right paremeters (case-insensitive)
-*
-* @return A string of text between $deliLeft and $deliRight
-*/
+/**
+ * Searches the given string and returns the inside of the left and right paremeters (case-insensitive)
+ *
+ * @author 3nvisi0n
+ *
+ * @return A string of text between $deliLeft and $deliRight
+ *
+ */
 function stribet($inputstr, $deliLeft, $deliRight)
 {
 	$posLeft = stripos($inputstr, $deliLeft) + strlen($deliLeft);
@@ -42,16 +45,17 @@ function stribet($inputstr, $deliLeft, $deliRight)
 }
 
 
-/*
-* @credit 3nvisi0n
-*
-* Opens a webpage and grabs the sites source code (html)
-*
-* @param $headers_additional An array of additional headers, also overwrites headers listed
-* @param $headers_return Determines if you want headers returned in the results
-* @param $headers_parse Whether or not you want the returned data split up and parsed to an array or not
-* @return A string of the source code
-*/
+/**
+ * Opens a webpage and grabs the sites source code (html)
+ *
+ * @author 3nvisi0n
+ *
+ * @param $headers_additional An array of additional headers, also overwrites headers listed
+ * @param $headers_return Determines if you want headers returned in the results
+ * @param $headers_parse Whether or not you want the returned data split up and parsed to an array or not
+ * @return A string of the source code
+ *
+ */
 function get($url, $headers_additional = array(), $headers_return = false, $headers_parse = false)
 {
 	$urlp = parse_url($url);
@@ -108,22 +112,23 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
 }
 
 
-/*
-* @credit jmj001
-* @credit Dubz
-*
-* Posts data to a website using the curl method
-*
-* @param $url The URL to post to
-* @param $post_data The array of data to be posted
-* @param $headers Additional headers to be sent
-* @param $proxy The proxy address to be used
-* @param $proxyport Port to connect to proxy
-* @param $proxywd Password to access proxy
-* @param $proxtype Type of proxy connection
-* @param $timeout Time to wait for proxy connection
-* @return An array of strings containing the status and content (html)
-*/
+/**
+ * Posts data to a website using the curl method
+ *
+ * @author jmj001
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $url The URL to post to
+ * @param $post_data The array of data to be posted
+ * @param $headers Additional headers to be sent
+ * @param $proxy The proxy address to be used
+ * @param $proxyport Port to connect to proxy
+ * @param $proxywd Password to access proxy
+ * @param $proxtype Type of proxy connection
+ * @param $timeout Time to wait for proxy connection
+ * @return An array of strings containing the status and content (html)
+ *
+ */
 function curl_post($url, $post_data, $headers = array(), $proxy = null, $proxyport = null, $proxypwd = false, $proxytype = CURLPROXY_HTTP, $timeout = 30)
 {
 	$curl = curl_init();
@@ -168,25 +173,28 @@ function curl_post($url, $post_data, $headers = array(), $proxy = null, $proxypo
 }
 
 
-/*
-* @credit Dubz
-* Determines if the file is ran by command line
-*
-* @return A boolean regarding execution by command line
-*/
+/**
+ * Determines if the file is ran by command line
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @return A boolean regarding execution by command line
+ *
+ */
 function commandLine()
 {
 	return (in_array(php_sapi_name(), array('cgi', 'cgi-fcgi', 'cli', 'cli-server')) OR defined('STDIN'));
 }
 
 
-/*
-* @credit Dubz
-*
-* Gets the IP of the user requesting the file
-*
-* @return A string containing the user's IP
-*/
+/**
+ * Gets the IP of the user requesting the file
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @return A string containing the user's IP
+ *
+ */
 function getIP()
 {
 	#Catch for CLI executions
@@ -204,18 +212,42 @@ function getIP()
 	return $ip;
 }
 
+/**
+ * Checks if a given IP address matches the specified CIDR subnet/s
+ *
+ * @author tott			https://github.com/tott/
+ * @author trenshaw		https://github.com/trenshaw/
+ * 
+ * @param string $ip The IP address to check
+ * @param mixed $cidrs The IP subnet (string) or subnets (array) in CIDR notation
+ * @param string $match optional If provided, will contain the first matched IP subnet
+ * @return boolean TRUE if the IP matches a given subnet or FALSE if it does not
+ *
+ */
+function ip_match($ip, $cidrs, &$match = null) {
+	foreach((array) $cidrs as $cidr) {
+		list($subnet, $mask) = explode('/', $cidr);
+		if(((ip2long($ip) & ($mask = ~ ((1 << (32 - $mask)) - 1))) == (ip2long($subnet) & $mask))) {
+			$match = $cidr;
+			return true;
+		}
+	}
+	return false;
+}
 
-/*
-* @credit Dubz
-*
-* Generates a random string
-*
-* @param $length The length of the string to return
-* @param $lower Include lower-case characters
-* @param $upeer Include upper-case characters
-* @param $numeric Include numeric characters
-* @return A randomly generated string or false if empty
-*/
+
+/**
+ * Generates a random string
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $length The length of the string to return
+ * @param $lower Include lower-case characters
+ * @param $upeer Include upper-case characters
+ * @param $numeric Include numeric characters
+ * @return A randomly generated string or false if empty
+ *
+ */
 function generateRandom($length = 8, $lower = true, $upper = true, $numeric = true)
 {
 	$length = (String)floor($length);
@@ -239,13 +271,14 @@ function generateRandom($length = 8, $lower = true, $upper = true, $numeric = tr
 }
 
 
-/*
-* @credit Dubz
-*
-* Converts a numerical time() to a 'datetime' format
-*
-* @return A string with mysql 'datetime' stamp
-*/
+/**
+ * Converts a numerical time() to a 'datetime' format
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @return A string with mysql 'datetime' stamp
+ *
+ */
 function mysql_datetime($time = null)
 {
 	if(!$time)
@@ -255,15 +288,16 @@ function mysql_datetime($time = null)
 }
 
 
-/*
-* @credit Dubz
-*
-* Opens and saves an image from a website or local location
-*
-* @param $inPath Location to get image
-* @param $directory Location to save image
-* @return Returns a boolean of if the image was saved
-*/
+/**
+ * Opens and saves an image from a website or local location
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $inPath Location to get image
+ * @param $directory Location to save image
+ * @return Returns a boolean of if the image was saved
+ *
+ */
 function save_image($inPath, $directory = '')
 {
 	//Download images from remote server
@@ -291,28 +325,30 @@ function save_image($inPath, $directory = '')
 }
 
 
-/*
-* @credit Dubz
-*
-* Checks if the given string is base64 valid
-*
-* @param $base64String String to be tested for base64 validity
-* @return Returns a boolean of if it is base64 valid
-*/
+/**
+ * Checks if the given string is base64 valid
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $base64String String to be tested for base64 validity
+ * @return Returns a boolean of if it is base64 valid
+ *
+ */
 function is_base64($base64String)
 {
 	return (base64_encode(base64_decode($base64String)) == $base64String);
 }
 
 
-/*
-* @credit Dubz
-*
-* Checks if the given string is a serialized array
-*
-* @param $serializedString String to be tested
-* @return Returns a boolean of if it is a serialized array
-*/
+/**
+ * Checks if the given string is a serialized array
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $serializedString String to be tested
+ * @return Returns a boolean of if it is a serialized array
+ *
+ */
 function is_serialized($serializedString)
 {
 	return (@unserialize($serializedString) !== false);
@@ -320,16 +356,17 @@ function is_serialized($serializedString)
 
 
 
-/*
-* @credit Dubz
-*
-* Checks if the port is open for the ip address
-*
-* @param $ip IP adress of server checking
-* @param $port Port number to check if open
-* @param $timeout How long to wait for a connection
-* @return Returns an array of the port's status using "open" for results and adding "errno" and "errstr" on closed
-*/
+/**
+ * Checks if the port is open for the ip address
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $ip IP adress of server checking
+ * @param $port Port number to check if open
+ * @param $timeout How long to wait for a connection
+ * @return Returns an array of the port's status using "open" for results and adding "errno" and "errstr" on closed
+ *
+ */
 function checkPort($ip = '127.0.0.1', $port = 80, $timeout = 2)
 {
 	$conn = @fsockopen($ip, $port, $errno, $errstr, $timeout);
@@ -342,52 +379,54 @@ function checkPort($ip = '127.0.0.1', $port = 80, $timeout = 2)
 }
 
 
-/*
-* @credit kbluhm
-*
-* Turns an array into a string to be saved to a php file
-* Used to save an array to a php file instead of a text file, which will not show up if ran
-*
-* @param $array Array to be converted to string
-* @param $arrayName Name to be used for array in return
-* @return Returns a string of a php array in standard php format
-*
-*/
+/**
+ * Turns an array into a string to be saved to a php file
+ * Used to save an array to a php file instead of a text file, which will not show up if ran
+ *
+ * @author kbluhm
+ *
+ * @param $array Array to be converted to string
+ * @param $arrayName Name to be used for array in return
+ * @return Returns a string of a php array in standard php format
+ *
+ */
 function arraytotext($array, $name = 'array')
 {
 	$text = '$'.$name.' = '.var_export($array, true).';';
 	return $text;
 }
 
-/*
-* @credit Dubz
-*
-* Checks if the user is on a proxy network
-* NOTE: This is not 100% guaranteed and may return false positives if the client is running a webserver
-*
-* @return A boolean regarding if they are on a proxy
-*/
-function usingProxy()
+/**
+ * Checks if the user is on a proxy network
+ * NOTE: This is not 100% guaranteed and may return false positives if the client is running a webserver
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @return A boolean regarding if they are on a proxy
+ *
+ */
+function usingProxy($blockedPorts = array(80, 443, 8080))
 {
-	$blockedPorts = array('80', '443', '8080');
+	// $blockedPorts = array('80', '443', '8080');
 	foreach($blockedPorts as $port)
 	{
-		if(checkPort(getIP(), $port))
+		if(checkPort(getIP(), $port)['open'])
 			return true;
 	}
 	return false;
 }
 
 
-/*
-* @credit Dubz
-*
-* Converts an array to a comma separated string following proper grammar rules
-*
-* @param $list The array to list
-* @param $lastIdentifier The word used before the last list item
-* @return A string of a properly formatted, comma separated list
-*/
+/**
+ * Converts an array to a comma separated string following proper grammar rules
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $list The array to list
+ * @param $lastIdentifier The word used before the last list item
+ * @return A string of a properly formatted, comma separated list
+ *
+ */
 function array2commaList($list, $lastIdentifier = 'and')
 {
 	switch(count($list))
@@ -409,66 +448,69 @@ function array2commaList($list, $lastIdentifier = 'and')
 }
 
 
-/*
-* @credit Dubz
-*
-* Converts error numbrs to the string used to define them
-*
-* @param $errno The error number provided
-* @return A string that is used to define the error number
-*/
+/**
+ * Converts error numbrs to the string used to define them
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $errno The error number provided
+ * @return A string that is used to define the error number
+ *
+ */
 function errtostr($errno)
 {
 	switch($errno)
 	{
-		case E_ERROR: return 'E_ERROR'; break;							#1
-		case E_WARNING: return 'E_WARNING'; break;						#2
-		case E_PARSE: return 'E_PARSE'; break;							#4
-		case E_NOTICE: return 'E_NOTICE'; break;						#8
-		case E_CORE_ERROR: return 'E_CORE_ERROR'; break;				#16
-		case E_CORE_WARNING: return 'E_CORE_WARNING'; break;			#32
-		case E_COMPILE_ERROR: return 'E_COMPILE_ERROR'; break;			#64
-		case E_COMPILE_WARNING: return 'E_COMPILE_WARNING'; break;		#128
-		case E_USER_ERROR: return 'E_USER_ERROR'; break;				#256
-		case E_USER_WARNING: return 'E_USER_WARNING'; break;			#512
-		case E_USER_NOTICE: return 'E_USER_NOTICE'; break;				#1024
-		case E_STRICT: return 'E_STRICT'; break;						#2048
-		case E_RECOVERABLE_ERROR: return 'E_RECOVERABLE_ERROR'; break;	#4096
-		case E_DEPRECATED: return 'E_DEPRECATED'; break;				#8192
-		case E_USER_DEPRECATED: return 'E_USER_DEPRECATED'; break;		#16384
-		case E_ALL: return 'E_ALL'; break;								#32767
+		case E_ERROR: return 'E_ERROR';								#1
+		case E_WARNING: return 'E_WARNING';							#2
+		case E_PARSE: return 'E_PARSE';								#4
+		case E_NOTICE: return 'E_NOTICE';							#8
+		case E_CORE_ERROR: return 'E_CORE_ERROR';					#16
+		case E_CORE_WARNING: return 'E_CORE_WARNING';				#32
+		case E_COMPILE_ERROR: return 'E_COMPILE_ERROR';				#64
+		case E_COMPILE_WARNING: return 'E_COMPILE_WARNING';			#128
+		case E_USER_ERROR: return 'E_USER_ERROR';					#256
+		case E_USER_WARNING: return 'E_USER_WARNING';				#512
+		case E_USER_NOTICE: return 'E_USER_NOTICE';					#1024
+		case E_STRICT: return 'E_STRICT';							#2048
+		case E_RECOVERABLE_ERROR: return 'E_RECOVERABLE_ERROR';		#4096
+		case E_DEPRECATED: return 'E_DEPRECATED';					#8192
+		case E_USER_DEPRECATED: return 'E_USER_DEPRECATED';			#16384
+		case E_ALL: return 'E_ALL';									#32767
 		default:
 			return false;
 	}
 }
 
 
-/*
-* @Credit Dubz
-*
-* Tells if a number is within the given range
-*
-* @param $num The number to check
-* @param $low The lower number of the range
-* @param $high The higher number of the range
-* @return A boolen telling if the number is in the range
-*/
+/**
+ * Tells if a number is within the given range
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $num The number to check
+ * @param $low The lower number of the range
+ * @param $high The higher number of the range
+ * @return A boolen telling if the number is in the range
+ *
+ */
 function in_range($num, $low, $high)
 {
 	return (($num >= $low) && ($num <= $high));
 }
 
 
-/*
-* @Credit Fou-Lu
-* @Credit Dubz
-*
-* Grabs all of the tag attribue values of the html code given
-*
-* @param $html The code of an html file
-* @param $tag The name of the tags to collect
-* @return An array of the names and values of the tags
-*/
+/**
+ * Grabs all of the tag attribue values of the html code given
+ *
+ * @author Fou-Lu
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $html The code of an html file
+ * @param $tag The name of the tags to collect
+ * @return An array of the names and values of the tags
+ *
+ */
 function get_tag_data($html, $tag)
 {
 	$dom = new DOMDocument('1.0');
@@ -493,14 +535,15 @@ function get_tag_data($html, $tag)
 }
 
 
-/*
-* @Credit Dubz
-*
-* Returns the extension of a given filename
-*
-* @param $filename The name of the file
-* @return A string of the extension
-*/
+/**
+ * Returns the extension of a given filename
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $filename The name of the file
+ * @return A string of the extension
+ *
+ */
 function getFileExtension($filename)
 {
 	#Remove any extra queries if from a url (won't affect normal queries)
@@ -511,14 +554,15 @@ function getFileExtension($filename)
 }
 
 
-/*
-* @Credit Dubz
-*
-* Encodes a string to hex
-*
-* @param $str The string to encode
-* @return A hex encoded version of the string
-*/
+/**
+ * Encodes a string to hex
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $str The string to encode
+ * @return A hex encoded version of the string
+ *
+ */
 function strtohex($str)
 {
 	$hex = '';
@@ -528,14 +572,15 @@ function strtohex($str)
 }
 
 
-/*
-* @Credit Dubz
-*
-* Decodes a hex string
-*
-* @param $hex The string to decode
-* @return A decoded version of the hex string
-*/
+/**
+ * Decodes a hex string
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $hex The string to decode
+ * @return A decoded version of the hex string
+ *
+ */
 function hextostr($hex)
 {
 	$str = pack("H*", str_replace('%', '', $hex));
@@ -543,14 +588,15 @@ function hextostr($hex)
 }
 
 
-/*
-* @Credit [Unknown]
-*
-* Properly adjusts the case for a person's name
-*
-* @param $string The string to capitalize
-* @return A properly capitalized string for names
-*/
+/**
+ * Properly adjusts the case for a person's name
+ *
+ * @author [Unknown]
+ *
+ * @param $string The string to capitalize
+ * @return A properly capitalized string for names
+ *
+ */
 function ucname($string)
 {
 	$string = ucwords(strtolower($string));
@@ -563,15 +609,16 @@ function ucname($string)
 }
 
 
-/*
-* @Credit [Unknown]
-*
-* The equivelant to javascript's charCodeAt() function
-*
-* @param $str The input string
-* @param $index The position in the string
-* @return 
-*/
+/**
+ * The equivelant to javascript's charCodeAt() function
+ *
+ * @author [Unknown]
+ *
+ * @param $str The input string
+ * @param $index The position in the string
+ * @return 
+ *
+ */
 function charCodeAt($str, $index)
 {
 	$char = mb_substr($str, $index, 1, 'UTF-8');
@@ -585,15 +632,15 @@ function charCodeAt($str, $index)
 }
 
 
-/*
-*
-* @Credit [Unknown]
-*
-* utf8 supported ord function
-*
-* @param $char The input character
-* @return A numeric representation of the ord
-*/
+/**
+ * utf8 supported ord function
+ *
+ * @author [Unknown]
+ *
+ * @param $char The input character
+ * @return A numeric representation of the ord
+ *
+ */
 function utf8_ord($char)
 {
 	$len = strlen($char);
@@ -614,32 +661,32 @@ function utf8_ord($char)
 }
 
 
-/*
-*
-* @Credit [unknown]
-*
-* utf-8 supported character selection
-*
-* @param $str The input string
-* @param $num The position of the character
-* @return The character at the given position
-*/
+/**
+ * utf-8 supported character selection
+ *
+ * @author [unknown]
+ *
+ * @param $str The input string
+ * @param $num The position of the character
+ * @return The character at the given position
+ *
+ */
 function utf8_charAt($str, $num)
 {
 	return mb_substr($str, $num, 1, 'UTF-8');
 }
 
 
-/*
-*
-* @Credit Rizal Almashoor
-*
-* Performs a 32 bit left shift on 64 bit machines
-*
-* @param $a Input number
-* @param $b Number of steps
-* @Return a number that has been shifted left
-*/
+/**
+ * Performs a 32 bit left shift on 64 bit machines
+ *
+ * @author Rizal Almashoor
+ *
+ * @param $a Input number
+ * @param $b Number of steps
+ * @return a number that has been shifted left
+ *
+ */
 function bitShiftLeft_32($a, $b)
 {
 	// convert to binary (string)
@@ -663,16 +710,16 @@ function bitShiftLeft_32($a, $b)
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Performs a 32 bit right shift on 64 bit machines
-*
-* @param $a Input number
-* @param $b Number of steps
-* @Return a number that has been shifted right
-*/
+/**
+ * Performs a 32 bit right shift on 64 bit machines
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $a Input number
+ * @param $b Number of steps
+ * @return a number that has been shifted right
+ *
+ */
 function bitShiftRight_32($a, $b, $leadingZeros = false)
 {
 	$strip = 32;
@@ -697,15 +744,15 @@ function bitShiftRight_32($a, $b, $leadingZeros = false)
 	}
 }
 
-/*
-*
-* @Credit Dubz
-*
-* Performs a 32 bit invert on 64 bit machines
-*
-* @param $a Input number
-* @Return an inverted version of the number
-*/
+/**
+ * Performs a 32 bit invert on 64 bit machines
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $a Input number
+ * @return an inverted version of the number
+ *
+ */
 function bitInvert_32($a)
 {
 	$inverted = -1;
@@ -714,32 +761,32 @@ function bitInvert_32($a)
 }
 
 
-/*
-*
-* @Credit voromax
-*
-* Return unicode char by its code
-*
-* @param $u Input number
-* @return The character
-*/
+/**
+ * Return unicode char by its code
+ *
+ * @author voromax
+ *
+ * @param $u Input number
+ * @return The character
+ *
+ */
 function unichr($a)
 {
 	return mb_convert_encoding('&#'.intval($a).';', 'UTF-8', 'HTML-ENTITIES');
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Return mime type of file extension
-* Data obtained from http://www.iana.org/assignments/media-types/media-types.xhtml
-*
-* @param $file Direct path to a file
-* @param $use_fileinfo Whether or not fileinfo (finfo) should be used (if available)
-* @return A string of the mime type
-*/
+/**
+ * Return mime type of file extension
+ * Data obtained from http://www.iana.org/assignments/media-types/media-types.xhtml
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $file Direct path to a file
+ * @param $use_fileinfo Whether or not fileinfo (finfo) should be used (if available)
+ * @return A string of the mime type
+ *
+ */
 function getMimeType($file, $use_fileinfo = true)
 {
 	#First see if we can use the file info functions
@@ -839,17 +886,17 @@ function getMimeType($file, $use_fileinfo = true)
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Replace words in a string with strings matching the regex with a given array or set constants
-*
-* @param $data A string (or array of strings) to replace
-* @param $replacement An array of variables to use instead of constants
-* @param $pattern The regex pattern to search for using $1 as the word filler (default is between two pairs of brackets {{$1}})
-* @return A string of the mime type
-*/
+/**
+ * Replace words in a string with strings matching the regex with a given array or set constants
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $data A string (or array of strings) to replace
+ * @param $replacement An array of variables to use instead of constants
+ * @param $pattern The regex pattern to search for using $1 as the word filler (default is between two pairs of brackets {{$1}})
+ * @return A string of the mime type
+ *
+ */
 function replace($data, $replacement = null, $pattern = '/\{\{$1\}\}/')
 {
 	#Make sure the variable is in the pattern, else append it
@@ -889,38 +936,36 @@ function replace($data, $replacement = null, $pattern = '/\{\{$1\}\}/')
 }
 
 
-/*
-*
-* @Credit xdazz
-*
-* Convert a Unicode number into a character
-*
-* This function simulates JavaScripts version of string.fromCharCode()
-*
-* @return A string of the characters combined
-*/
+/**
+ * Convert a Unicode number into a character
+ * This function simulates JavaScripts version of string.fromCharCode()
+ *
+ * @author xdazz
+ *
+ * @return A string of the characters combined
+ *
+ */
 function str_fromCharCode()
 {
 	return implode(array_map('chr', func_get_args()));
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Index a directory
-*
-* This takes a directory and creates an array
-* where the key is the parent folder and the
-* values are the files and sub-folders
-*
-* @param $dir The directory to index
-* @param $sort Whether or not to sort sub-files/folders
-* @param $sort2 Whether or not to sort the final array
-* @return An array of the directory indexed
-*
-*/
+/**
+ * Index a directory
+ *
+ * This takes a directory and creates an array
+ * where the key is the parent folder and the
+ * values are the files and sub-folders
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $dir The directory to index
+ * @param $sort Whether or not to sort sub-files/folders
+ * @param $sort2 Whether or not to sort the final array
+ * @return An array of the directory indexed
+ *
+ */
 function builddir($dir, $sort = true, $sort2 = true)
 {
 	if(substr($dir, -1) != DIRECTORY_SEPARATOR)
@@ -950,19 +995,18 @@ function builddir($dir, $sort = true, $sort2 = true)
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Index a directory to one array with real file paths
-*
-* This takes a directory and creates an array
-* of the files real paths
-*
-* @param $dir The directory to index
-* @return An array of the directory indexed
-*
-*/
+/**
+ * Index a directory to one array with real file paths
+ *
+ * This takes a directory and creates an array
+ * of the files real paths
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $dir The directory to index
+ * @return An array of the directory indexed
+ *
+ */
 function buildpaths($dir)
 {
 	if(substr($dir, -1) != DIRECTORY_SEPARATOR)
@@ -988,17 +1032,17 @@ function buildpaths($dir)
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Fills an IP address and adds missing 0's
-* IPv4: 127.0.0.1 = 127.000.000.001
-* IPv6: ::1 = 0000:0000:0000:0000:0000:0000:0000:0001
-*
-* @param $ip  The IP address to convert (defaults to the getIP() function above)
-* @return A string of the IP converted
-*/
+/**
+ * Fills an IP address and adds missing 0's
+ * IPv4: 127.0.0.1 = 127.000.000.001
+ * IPv6: ::1 = 0000:0000:0000:0000:0000:0000:0000:0001
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $ip  The IP address to convert (defaults to the getIP() function above)
+ * @return A string of the IP converted
+ *
+ */
 function full_ip($ip = false)
 {
 	if(!$ip)
@@ -1057,30 +1101,30 @@ function full_ip($ip = false)
 }
 
 
-/*
-*
-* @Credit Dubz
-*
-* Equivalent of JavaScript's parseInt()
-*
-* @param $str  The input string to parse
-* @return An integer of the numbers in the input string
-*/
+/**
+ * Equivalent of JavaScript's parseInt()
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $str  The input string to parse
+ * @return An integer of the numbers in the input string
+ *
+ */
 function parseInt($str)
 {
 	return (int)preg_replace('/\D/', '', $str);
 }
 
 
-/*
-*
-* @Credit vdklah
-*
-* Returns a port to use from a parsed url
-*
-* @param $urlInfo  An array obtained from parse_url()
-* @return An integer of the port to be used
-*/
+/**
+ * Returns a port to use from a parsed url
+ *
+ * @author vdklah
+ *
+ * @param $urlInfo  An array obtained from parse_url()
+ * @return An integer of the port to be used
+ *
+ */
 function getURLPort($urlInfo)
 {
 	if(isset($urlInfo['port']))
@@ -1110,14 +1154,14 @@ function getURLPort($urlInfo)
 }
 
 
-/*
-*
-* @credit arplynn@gmail.com
-*
-* Makes the console ding for command line applications
-*
-* @return void
-*/
+/**
+ * Makes the console ding for command line applications
+ *
+ * @author arplynn@gmail.com
+ *
+ * @return void
+ *
+ */
 function cli_beep()
 {
 	echo "\x07";
