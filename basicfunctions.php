@@ -129,7 +129,7 @@ function get($url, $headers_additional = array(), $headers_return = false, $head
  * @return An array of strings containing the status and content (html)
  *
  */
-function curl_post($url, $post_data, $headers = array(), $proxy = null, $proxyport = null, $proxypwd = false, $proxytype = CURLPROXY_HTTP, $timeout = 30)
+function curl_post($url, $post_data, $headers = array(), $proxy = NULL, $proxyport = NULL, $proxypwd = false, $proxytype = CURLPROXY_HTTP, $timeout = 30)
 {
 	$curl = curl_init();
 	if($curl)
@@ -224,15 +224,36 @@ function getIP()
  * @return boolean TRUE if the IP matches a given subnet or FALSE if it does not
  *
  */
-function ip_match($ip, $cidrs, &$match = null) {
-	foreach((array) $cidrs as $cidr) {
+function ip_match($ip, $cidrs, &$match = NULL)
+{
+	foreach((array)$cidrs as $cidr)
+	{
 		list($subnet, $mask) = explode('/', $cidr);
-		if(((ip2long($ip) & ($mask = ~ ((1 << (32 - $mask)) - 1))) == (ip2long($subnet) & $mask))) {
+		if(((ip2long($ip) & ($mask = ~ ((1 << (32 - $mask)) - 1))) == (ip2long($subnet) & $mask)))
+		{
 			$match = $cidr;
 			return true;
 		}
 	}
 	return false;
+}
+
+/**
+ * Checks if a given IP address is internal, according to RFC1918
+ *
+ * @author Dubz			https://github.com/Dubz/
+ * 
+ * @param string $ip The IP address to check
+ * @param mixed $cidrs The IP subnet (string) or subnets (array) in CIDR notation
+ * @param string $match optional If provided, will contain the first matched IP subnet
+ * @return boolean TRUE if the IP matches a given subnet or FALSE if it does not
+ *
+ */
+function is_ip_internal($ip = NULL)
+{
+	if(is_null($ip))
+		$ip = getIP();
+	return ip_match($ip, array('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'));
 }
 
 
@@ -262,7 +283,7 @@ function generateRandom($length = 8, $lower = true, $upper = true, $numeric = tr
 	if($numeric)
 		$array = array_merge($array, range('0', '9'));
 	if(empty($array))
-		return null;
+		return NULL;
 	while(strlen($string) < $length)
 	{
 		$string .= $array[array_rand($array)];
@@ -279,9 +300,9 @@ function generateRandom($length = 8, $lower = true, $upper = true, $numeric = tr
  * @return A string with mysql 'datetime' stamp
  *
  */
-function mysql_datetime($time = null)
+function mysql_datetime($time = NULL)
 {
-	if(!$time)
+	if(is_null($time))
 		$time = time();
 	$stamp = date("Y-m-d H:i:s", $time);
 	return $stamp;
@@ -521,7 +542,7 @@ function get_tag_data($html, $tag)
 		foreach($input as $item)
 		{
 			$attributes = $item->attributes;
-			if($attributes->getNamedItem('name') != null)
+			if($attributes->getNamedItem('name') != NULL)
 			{
 				$aResult[$attributes->getNamedItem('name')->nodeValue] = array();
 				foreach($attributes as $attr)
@@ -897,7 +918,7 @@ function getMimeType($file, $use_fileinfo = true)
  * @return A string of the mime type
  *
  */
-function replace($data, $replacement = null, $pattern = '/\{\{$1\}\}/')
+function replace($data, $replacement = NULL, $pattern = '/\{\{$1\}\}/')
 {
 	#Make sure the variable is in the pattern, else append it
 	if(strpos($pattern, '$1') === false)
