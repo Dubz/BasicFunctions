@@ -347,6 +347,43 @@ function save_image($inPath, $directory = '')
 
 
 /**
+ * Opens a given image, and converts it to a base64 string
+ *
+ * @author Dubz			https://github.com/Dubz/
+ *
+ * @param $img Path to an image
+ * @return Returns a string containing the base64 version of the original image
+ */
+function create_image_base64($img)
+{
+	$image = imagecreatefromstring(file_get_contents($img));
+	ob_start();
+	switch(getFileExtension($img))
+	{
+		case 'bmp':
+			imagebmp($image);
+		break;
+		case 'gif':
+			imagegif($image);
+		break;
+		case 'jpg':
+		case 'jpeg':
+			imagejpeg($image);
+		break;
+		case 'png':
+			imagepng($image);
+		break;
+		default:
+			return false;
+	}
+	$contents =  ob_get_contents();
+	ob_end_clean();
+	imagedestroy($image);
+	return base64_encode($contents);
+}
+
+
+/**
  * Checks if the given string is base64 valid
  *
  * @author Dubz			https://github.com/Dubz/
