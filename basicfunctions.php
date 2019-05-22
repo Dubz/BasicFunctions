@@ -912,6 +912,7 @@ function getMimeType($file, $use_fileinfo = true)
 		'woff2'	=> 'font/woff2',
 		#Image
 		'bmp'	=> 'image/bmp',
+		'cur'	=> 'image/bmp',
 		'gif'	=> 'image/gif',
 		'ico'	=> 'image/x-icon',
 		'jpeg'	=> 'image/jpeg',
